@@ -53,10 +53,20 @@ plugins: [vue(), viteImagemin()],
 ```
 
 #### vue3 的两种写法
+详情请查看views/classComponent、views/defineComponent
 
-运行页面
+注意：项目创建新页面只需要在view中创建新目录，目录中必须包含main.ts
+运行：npm run dev 或者 yarn dev
+打开：localhost:3000/pages/classComponent.html
+
+改良：
+1. tsconfig.json新增：
 ```
-npm run dev
-打开
-localhost:3000/pages/classComponent.html
+"baseUrl": ".",
+"paths": {
+  "@/*": ["src/*"]
+}
 ```
+使页面引入ts不报错 import api from "@/api";
+
+2. 打包新增判断，pages已经有对应html的时候不进行创建文件

@@ -19,17 +19,25 @@ const pageEntry = {};
   if (!fs.existsSync("./pages")) {
     fs.mkdirSync("./pages");
   }
+  // 创建多页面模板
   allEntry.forEach((entry: string) => {
-    const index = temp.toString().indexOf("</body>");
-    const content =
-      temp.toString().slice(0, index) +
-      `<script type="module" src=".${entry}"></script>` +
-      temp.toString().slice(index);
     const pathArr = entry.split("/");
     const name = pathArr[pathArr.length - 2];
-    fs.writeFile(`./pages/${name}.html`, content, err => {
-      if (err) console.log(err);
-    });
+    // 判断文件是否存在
+    try {
+      fs.accessSync(`./pages/${name}.html`);
+    } catch (err) {
+      console.log(`创建${name}.html文件`);
+      const index = temp.toString().indexOf("</body>");
+      const content =
+        temp.toString().slice(0, index) +
+        `<script type="module" src=".${entry}"></script>` +
+        temp.toString().slice(index);
+      fs.writeFile(`./pages/${name}.html`, content, err => {
+        if (err) console.log(err);
+      });
+    }
+    // input中的配置
     pageEntry[name] = path.resolve(__dirname, `/pages/${name}.html`);
   });
 })();
