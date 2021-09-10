@@ -27,6 +27,7 @@ VITE_PROJECT_ENV = 'prod'
 ```
 "build": "vue-tsc --noEmit && VITE_PROJECT_ENV=prod vite build"
 ```
+在vite.config.ts中使用 process.env.VITE_PROJECT_ENV === "prod"
 
 #### 多页面打包
 ```

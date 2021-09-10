@@ -1,8 +1,9 @@
 <!-- @format -->
 <template>
-  <div>1233</div>
+  <div>defineComponent</div>
   <div>{{ topinset }}</div>
   <div>{{ doubleCount }}</div>
+  <div>{{ list }}</div>
 </template>
 
 <script lang="ts">

@@ -3,7 +3,7 @@
   <div>1233</div>
   <div>{{ a }}</div>
   <div>{{ ab }}</div>
-  <hello-world :a="ab" :b="a"></hello-world>
+  <HelloWorld :a="ab" :b="a" />
 </template>
 
 <script lang="ts" setup>
@@ -11,6 +11,7 @@ import { ref, nextTick, computed, watch } from "vue";
 // 组件直接import
 import HelloWorld from "@/components/HelloWorld.vue";
 // defineProps<{ a: string; b: string }>();
+// defineEmits
 let a = ref("小明");
 const ab = computed(() => a.value + "1");
 nextTick(() => {

@@ -7,6 +7,7 @@ import glob from "glob";
 import fs from "fs";
 import viteCompression from "vite-plugin-compression";
 import viteImagemin from "vite-plugin-imagemin";
+import legacy from "@vitejs/plugin-legacy";
 const isProd = process.env.VITE_PROJECT_ENV === "prod";
 const pageEntry = {};
 
@@ -42,19 +43,33 @@ const pageEntry = {};
   });
 })();
 
-export default defineConfig({
-  server: {
-    fs: {
-      strict: false
-    }
-  },
-  plugins: [
-    vue(),
-    viteCompression({
-      ext: ".gz",
-      algorithm: "gzip",
-      deleteOriginFile: false
-    }),
+const plugins = [
+  vue(),
+  viteCompression({
+    ext: ".gz",
+    algorithm: "gzip",
+    deleteOriginFile: false
+  }),
+  legacy({
+    targets: [
+      "> 1%, last 1 version, ie >= 11",
+      "safari >= 10",
+      "Android > 39",
+      "Chrome >= 60",
+      "Safari >= 10.1",
+      "iOS >= 10.3",
+      "Firefox >= 54",
+      "Edge >= 15"
+    ],
+    additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
+    polyfills: ["es.promise.finally", "es/map", "es/set"],
+    modernPolyfills: ["es.promise.finally"]
+  })
+];
+
+// 生产进行图片压缩
+if (isProd) {
+  plugins.push(
     viteImagemin({
       gifsicle: {
         optimizationLevel: 7,
@@ -82,7 +97,16 @@ export default defineConfig({
         ]
       }
     })
-  ],
+  );
+}
+
+export default defineConfig({
+  server: {
+    fs: {
+      strict: false
+    }
+  },
+  plugins,
   resolve: {
     alias: {
       "@": path.join(__dirname, "./src")
@@ -91,7 +115,18 @@ export default defineConfig({
   build: {
     outDir: isProd ? "dist" : "pre",
     rollupOptions: {
-      input: pageEntry
+      input: pageEntry,
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+        }
+      }
     }
   }
 });

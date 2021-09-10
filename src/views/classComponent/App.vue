@@ -33,6 +33,7 @@ export default class Cla extends Vue.with(Props) {
     this.$nextTick(() => {
       console.log("nextTick");
     });
+    // this.$emit("close");
   }
 
   get balance1() {
